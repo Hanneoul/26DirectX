@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 /*
- * [C 스타일 강의 포인트 1: 왜 QueryPerformanceCounter인가?]
+ * [포인트 1: 왜 QueryPerformanceCounter인가?]
  * - 일반적인 time()이나 GetTickCount()는 정밀도가 낮음 (약 10~16ms 단위).
  * - 게임은 1ms(0.001초) 이하의 정밀도가 필요하므로, CPU의 '클럭 진동수'를 직접 이용하는 고해상도 타이머를 씀.
  */
@@ -28,7 +28,7 @@ void UpdateTimer(CGameTimer* timer) {
     // 1. 현재 시점의 카운트 값을 가져옴
     QueryPerformanceCounter(&currentTime);
 
-    /* * [C 스타일 강의 포인트 2: 델타 타임 계산 공식]
+    /* * [포인트 2: 델타 타임 계산 공식]
      * (현재 카운트 - 이전 카운트) = 흐른 진동 횟수
      * (흐른 진동 횟수 / 초당 진동 횟수) = 흐른 시간(초)
      */

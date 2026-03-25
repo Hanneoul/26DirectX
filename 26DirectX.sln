@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture04-DX_ShaderBasic", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture04-DX_ShaderCompile", "Lecture04-DX_ShaderCompile\Lecture04-DX_ShaderCompile.vcxproj", "{C390A64F-7162-4A9D-98F6-62036E717A5A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture02-win32_KeyEvent_Polling", "Lecture02-win32_KeyEvent_Polling\Lecture02-win32_KeyEvent_Polling.vcxproj", "{2C947138-F0BD-4207-BD89-CB57B22DEC82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +143,14 @@ Global
 		{C390A64F-7162-4A9D-98F6-62036E717A5A}.Release|x64.Build.0 = Release|x64
 		{C390A64F-7162-4A9D-98F6-62036E717A5A}.Release|x86.ActiveCfg = Release|Win32
 		{C390A64F-7162-4A9D-98F6-62036E717A5A}.Release|x86.Build.0 = Release|Win32
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Debug|x64.ActiveCfg = Debug|x64
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Debug|x64.Build.0 = Debug|x64
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Debug|x86.ActiveCfg = Debug|Win32
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Debug|x86.Build.0 = Debug|Win32
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Release|x64.ActiveCfg = Release|x64
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Release|x64.Build.0 = Release|x64
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Release|x86.ActiveCfg = Release|Win32
+		{2C947138-F0BD-4207-BD89-CB57B22DEC82}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

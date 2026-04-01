@@ -9,8 +9,7 @@
  * 구조: Component -> GameObject -> GameWorld 순으로 확장됨.
          (루프 한 번 돌 때 [입력 -> 업데이트 -> 렌더링] 순서로 모든 객체를 훑음.)
  [작동 원리]
- - Start: 물체가 태어날 때 딱 한 번 실행되는 초기화 코드
- - Update: 게임이 켜져 있는 동안 무한히 반복 실행되는 실행 코드
+ - Start(): 물체가 태어날 때 딱 한 번 실행되는 초기화 코드
  - OnInput(): 키보드/마우스 상태를 확인.
  - OnUpdate(): 수치(좌표 등)를 계산.
  - OnRender(): 화면에 결과를 출력.
@@ -145,17 +144,19 @@ int main() {
     // [초기화] 게임 월드와 객체 생성
     std::vector<GameObject*> gameWorld;
 
+    // 시스템 정보 객체 조립
+    GameObject* sysInfo = new GameObject("SystemManager");
+    InfoDisplay* pInfo = new InfoDisplay();
+    sysInfo->AddComponent(pInfo);
+    gameWorld.push_back(sysInfo);
+
     // 플레이어 객체 조립
     GameObject* player = new GameObject("Player1");
     PlayerControl* pControl = new PlayerControl();
     player->AddComponent(pControl);
     gameWorld.push_back(player);
 
-    // 시스템 정보 객체 조립
-    GameObject* sysInfo = new GameObject("SystemManager");
-    InfoDisplay* pInfo = new InfoDisplay();
-    sysInfo->AddComponent(pInfo);
-    gameWorld.push_back(sysInfo);
+    
 
     // 시간 측정 준비
     std::chrono::high_resolution_clock::time_point prevTime = std::chrono::high_resolution_clock::now();
@@ -170,6 +171,20 @@ int main() {
         float dt = elapsed.count();
         prevTime = currentTime;
 
+        // ?. 스타트 실행
+        for (int i = 0; i < (int)gameWorld.size(); i++) 
+        {
+            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) 
+            {
+                // Start()가 호출된 적 없다면 여기서 호출 (유니티 방식)
+                if (gameWorld[i]->components[j]->isStarted == false)
+                {
+                    gameWorld[i]->components[j]->Start();
+                    gameWorld[i]->components[j]->isStarted = true;
+                }
+            }
+        }
+
         // B. 입력 단계 (Input Phase)
         for (int i = 0; i < (int)gameWorld.size(); i++) {
             for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) {
@@ -178,13 +193,10 @@ int main() {
         }
 
         // C. 업데이트 단계 (Update Phase)
-        for (int i = 0; i < (int)gameWorld.size(); i++) {
-            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) {
-                // Start()가 호출된 적 없다면 여기서 호출 (유니티 방식)
-                if (gameWorld[i]->components[j]->isStarted == false) {
-                    gameWorld[i]->components[j]->Start();
-                    gameWorld[i]->components[j]->isStarted = true;
-                }
+        for (int i = 0; i < (int)gameWorld.size(); i++) 
+        {
+            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) 
+            {
                 gameWorld[i]->components[j]->OnUpdate(dt);
             }
         }

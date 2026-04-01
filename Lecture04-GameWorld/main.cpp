@@ -10,9 +10,9 @@
          (루프 한 번 돌 때 [입력 -> 업데이트 -> 렌더링] 순서로 모든 객체를 훑음.)
  [작동 원리]
  - Start(): 물체가 태어날 때 딱 한 번 실행되는 초기화 코드
- - OnInput(): 키보드/마우스 상태를 확인.
- - OnUpdate(): 수치(좌표 등)를 계산.
- - OnRender(): 화면에 결과를 출력.
+ - Input(): 키보드/마우스 상태를 확인.
+ - Update(): 수치(좌표 등)를 계산.
+ - Render(): 화면에 결과를 출력.
 
 ================================================================================
 */
@@ -163,42 +163,59 @@ public:
 
 
 
-// --- [4단계: 메인 엔진 루프] ---
-int main() {
-    // [초기화] 게임 월드와 객체 생성
+class GameLoop
+{
+public:
+    std::chrono::high_resolution_clock::time_point prevTime;
     std::vector<GameObject*> gameWorld;
+    int isRunning;
+    float dt;
 
-    // 시스템 정보 객체 조립
-    GameObject* sysInfo = new GameObject("SystemManager");
-    InfoDisplay* pInfo = new InfoDisplay();
-    sysInfo->AddComponent(pInfo);
-    gameWorld.push_back(sysInfo);
+    //초기화
+    void Initialize()
+    {
+        //초기화시 동작준비됨
+        isRunning = 1;
 
-    // 플레이어 객체 조립
-    GameObject* player = new GameObject("Player1");
-    PlayerControl* pControl = new PlayerControl();
-    player->AddComponent(pControl);
-    gameWorld.push_back(player);
+        // 시간 측정 준비
+        prevTime = std::chrono::high_resolution_clock::now();
+        dt = 0;
+
+        // 시스템 정보 객체 조립
+        GameObject* sysInfo = new GameObject("SystemManager");
+        InfoDisplay* pInfo = new InfoDisplay();
+        sysInfo->AddComponent(pInfo);
+        gameWorld.push_back(sysInfo);
+
+        // 플레이어 객체 조립
+        GameObject* player = new GameObject("Player1");
+        PlayerControl* pControl = new PlayerControl();
+        player->AddComponent(pControl);
+        gameWorld.push_back(player);
+    }
 
     
 
-    // 시간 측정 준비
-    std::chrono::high_resolution_clock::time_point prevTime = std::chrono::high_resolution_clock::now();
+    void Input()
+    {
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) isRunning = 0;
 
-    // --- [무한 게임 루프] ---
-    while (true) {
-        if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) break;
-
-        // A. 시간 관리 (DeltaTime 계산)
-        std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> elapsed = currentTime - prevTime;
-        float dt = elapsed.count();
-        prevTime = currentTime;
-
-        // ?. 스타트 실행
-        for (int i = 0; i < (int)gameWorld.size(); i++) 
+        // B. 입력 단계 (Input Phase)
+        for (int i = 0; i < (int)gameWorld.size(); i++)
         {
-            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) 
+            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++)
+            {
+                gameWorld[i]->components[j]->Input();
+            }
+        }
+    }
+
+    void Update()
+    {
+        // C. 스타트 실행
+        for (int i = 0; i < (int)gameWorld.size(); i++)
+        {
+            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++)
             {
                 // Start()가 호출된 적 없다면 여기서 호출 (유니티 방식)
                 if (gameWorld[i]->components[j]->isStarted == false)
@@ -209,38 +226,73 @@ int main() {
             }
         }
 
-        // B. 입력 단계 (Input Phase)
-        for (int i = 0; i < (int)gameWorld.size(); i++) {
-            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) {
-                gameWorld[i]->components[j]->Input();
-            }
-        }
-
-        // C. 업데이트 단계 (Update Phase)
-        for (int i = 0; i < (int)gameWorld.size(); i++) 
+        // D. 업데이트 단계 (Update Phase)
+        for (int i = 0; i < (int)gameWorld.size(); i++)
         {
-            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) 
+            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++)
             {
                 gameWorld[i]->components[j]->Update(dt);
             }
         }
+    }
 
-        // D. 렌더링 단계 (Render Phase)
+    void Render()
+    {
+        // E. 렌더링 단계 (Render Phase)
         system("cls"); // 화면 지우기
-        for (int i = 0; i < (int)gameWorld.size(); i++) {
-            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++) {
+        for (int i = 0; i < (int)gameWorld.size(); i++)
+        {
+            for (int j = 0; j < (int)gameWorld[i]->components.size(); j++)
+            {
                 gameWorld[i]->components[j]->Render();
             }
         }
-
-        // CPU 과부하 방지 (약 60~100 FPS 유지 시도)
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    // [정리] 메모리 해제
-    for (int i = 0; i < (int)gameWorld.size(); i++) {
-        delete gameWorld[i]; // GameObject 소멸자가 컴포넌트들도 지움
+    void Run()
+    {
+        // --- [무한 게임 루프] ---
+        while (isRunning) {
+
+            // A. 시간 관리 (DeltaTime 계산)
+            std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> elapsed = currentTime - prevTime;
+            dt = elapsed.count();
+            prevTime = currentTime;
+
+            Input();
+            Update();
+            Render();
+
+            // CPU 과부하 방지 (약 60~100 FPS 유지 시도)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
     }
+
+    GameLoop()
+    {
+        Initialize();
+    }
+    ~GameLoop()
+    {
+        // [정리] 메모리 해제
+        for (int i = 0; i < (int)gameWorld.size(); i++)
+        {
+            delete gameWorld[i]; // GameObject 소멸자가 컴포넌트들도 지움
+        }
+    }
+
+};
+
+
+
+
+// --- [4단계: 메인 엔진 루프] ---
+int main() 
+{
+    GameLoop gLoop;
+    gLoop.Initialize();
+    gLoop.Run();
 
     return 0;
 }

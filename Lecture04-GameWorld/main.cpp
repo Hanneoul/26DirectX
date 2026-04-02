@@ -233,6 +233,8 @@ public:
         }
     }
 
+    
+
     void Run()
     {
         // --- [무한 게임 루프] ---
@@ -271,8 +273,8 @@ public:
 // --- [4단계: 메인 엔진 루프] ---
 int main() 
 {
+    //게임루프
     GameLoop gLoop;
-
     gLoop.Initialize();
 
     // 시스템 정보 객체 조립
@@ -287,6 +289,7 @@ int main()
     player->AddComponent(pControl);
     gLoop.gameWorld.push_back(player);
 
+    //게임루프 실행
     gLoop.Run();
 
     return 0;

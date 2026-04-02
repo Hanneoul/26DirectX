@@ -14,6 +14,7 @@ struct VideoConfig {
     int Height = 600;
     bool IsFullscreen = false;
     bool NeedsResize = false;
+    int VSync = 1;
 } g_Config;
 
 // 전역 변수
@@ -163,7 +164,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
             g_pImmediateContext->Draw(3, 0);
 
-            g_pSwapChain->Present(1, 0); // V-Sync 활성화
+            g_pSwapChain->Present(g_Config.VSync, 0); // V-Sync 활성화
         }
     }
 

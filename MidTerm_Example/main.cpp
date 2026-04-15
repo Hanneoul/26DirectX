@@ -13,7 +13,7 @@ public:
     bool isStarted = false;
 
     virtual void Start()[(A)]
-        virtual void Input() {}
+    virtual void Input() {}
     virtual void Update(float dt) = 0;
     virtual void Render() {}
     virtual ~Component() {}

@@ -24,6 +24,7 @@
     <ProjectGuid>{3b4be947-9fe0-4cf8-997b-4c7154dbf20c}</ProjectGuid>
     <RootNamespace>Lecture05ShaderCompile</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Lecture06-ShaderCompile</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

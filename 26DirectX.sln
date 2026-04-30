@@ -39,7 +39,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture06-ShaderCompile", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture04-GameWorld", "Lecture04-GameWorld\Lecture04-GameWorld.vcxproj", "{F106C7BD-E3A3-4410-A7C9-BF32491327DC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture06-ShaderBuffer", "Lecture06\Lecture06.vcxproj", "{AEAE6AD8-BA5E-4F45-A2AE-F80543662984}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture07-ShaderBuffer", "Lecture06\Lecture06.vcxproj", "{AEAE6AD8-BA5E-4F45-A2AE-F80543662984}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture06_Singleton", "Lecture06_Singleton\Lecture06_Singleton.vcxproj", "{590A5BAE-BA76-4D6B-AC79-D789341EAAA2}"
 EndProject
@@ -49,7 +49,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MidTerm_Example", "MidTerm_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Midterm_Example2", "Midterm_Example2\Midterm_Example2.vcxproj", "{9EA27A52-B1C9-4859-A8D4-88A460E1A81E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture06-Modulization", "Lecture06-Modulization\Lecture06-Modulization.vcxproj", "{BC472832-3559-48B4-A011-AFCC61BC9DEB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture07-Modulization", "Lecture06-Modulization\Lecture06-Modulization.vcxproj", "{BC472832-3559-48B4-A011-AFCC61BC9DEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

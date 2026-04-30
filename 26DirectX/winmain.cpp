@@ -29,11 +29,35 @@ struct Vertex
 {
     XMFLOAT3 pos; XMFLOAT4 col;
 };
+
 struct ConstantBuffer
 {
     XMMATRIX matWorld;
 };
 
+struct Mesh
+{
+    ID3D11Buffer* vBuffer;
+    ID3D11InputLayout* pInputLayout;
+    ID3D11VertexShader* pVS;
+    ID3D11PixelShader* pPS;
+    UINT vertexCount;
+    XMFLOAT4 color;
+
+    Mesh()
+        : vBuffer(NULL), pInputLayout(NULL), pVS(NULL), pPS(NULL), vertexCount(0)
+    {
+        color = { 1, 1, 1, 1 };
+    }
+
+    ~Mesh()
+    {
+        if (vBuffer) vBuffer->Release();
+        if (pInputLayout) pInputLayout->Release();
+        if (pVS) pVS->Release();
+        if (pPS) pPS->Release();
+    }
+};
 
 class DeltaTime
 {
@@ -52,7 +76,6 @@ public:
         return dt;
     }
 };
-
 
 class WindowContext
 {
@@ -247,32 +270,6 @@ public:
     }
 };
 
-
-struct Mesh
-{
-    ID3D11Buffer* vBuffer;
-    ID3D11InputLayout* pInputLayout;
-    ID3D11VertexShader* pVS;
-    ID3D11PixelShader* pPS;
-    UINT vertexCount;
-    XMFLOAT4 color;
-
-    Mesh()
-        : vBuffer(NULL), pInputLayout(NULL), pVS(NULL), pPS(NULL), vertexCount(0)
-    {
-        color = { 1, 1, 1, 1 };
-    }
-
-    ~Mesh()
-    {
-        if (vBuffer) vBuffer->Release();
-        if (pInputLayout) pInputLayout->Release();
-        if (pVS) pVS->Release();
-        if (pPS) pPS->Release();
-    }
-};
-
-
 class MeshRenderer : public Component
 {
     Mesh* pMeshData = nullptr;
@@ -397,8 +394,6 @@ public:
     {
     }
 };
-
-
 
 class GameLoop
 {
@@ -550,16 +545,20 @@ int WINAPI WinMain(HINSTANCE hI, HINSTANCE, LPSTR, int nS)
 
     std::string triShader = R"(
         cbuffer cb0 : register(b0) { matrix matWorld; };
+
         struct VS_IN { float3 pos : POSITION; float4 col : COLOR; };
         struct PS_IN { float4 pos : SV_POSITION; float4 col : COLOR; };
-        PS_IN VS(VS_IN input) {
+        
+        PS_IN VS(VS_IN input) 
+        {
             PS_IN output;
             output.pos = mul(float4(input.pos, 1.0f), matWorld);
             output.col = input.col;
             return output;
         }
+
         float4 PS(PS_IN input) : SV_Target { return input.col; }
-    )";;
+    )";
     ID3DBlob* vsBlob = gEngine.gfx.CompileShader(triShader, "VS", "vs_5_0");
     ID3DBlob* psBlob = gEngine.gfx.CompileShader(triShader, "PS", "ps_5_0");
 

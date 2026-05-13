@@ -147,44 +147,27 @@ LRESULT CALLBACK GlobalWndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
 // -----------------------------------------------------------------------------
 // [메인 엔트리 포인트]
 // -----------------------------------------------------------------------------
-int WINAPI WinMain(HINSTANCE hI, HINSTANCE, LPSTR, int nS) {
+int WINAPI WinMain(HINSTANCE hI, HINSTANCE, LPSTR, int nS) 
+{
     // 1. 엔진 매니저 초기화
     GameLoop gEngine;
     gEngine.Initialize(hI, GlobalWndProc);
 
-    // 2. 셰이더 소스 및 입력 레이아웃 설정
-    std::string triShader = R"(
-        cbuffer cbWorld    : register(b0) { matrix matWorld; };
-        cbuffer cbMaterial : register(b1) { float4 tintColor; };
-
-        struct VS_IN { float3 pos : POSITION; float4 col : COLOR; };
-        struct PS_IN { float4 pos : SV_POSITION; float4 col : COLOR; };
-
-        PS_IN VS(VS_IN input) {
-            PS_IN output;
-            output.pos = mul(float4(input.pos, 1.0f), matWorld);
-            output.col = input.col;
-            return output;
-        }
-
-        float4 PS(PS_IN input) : SV_Target {
-            return tintColor;
-        }
-    )";
-
-    D3D11_INPUT_ELEMENT_DESC ied[] = {
+    D3D11_INPUT_ELEMENT_DESC ied[] = 
+    {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
     // 셰이더 컴파일 및 생성
-    ShaderSet starShaders = gEngine.gfx.CompileAndCreate(triShader.c_str(), triShader.length(), false, ied, 2);
+    ShaderSet starShaders = gEngine.gfx.CompileAndCreate(L"effect.hlsl", 0, true, ied, 2);
 
     // 3. 메쉬 데이터 생성 (별 모양)
     float outerR = 0.5f;
     float innerR = 0.2f;
     XMFLOAT3 p[10];
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i) 
+    {
         float r = (i % 2 == 0) ? outerR : innerR;
         float angle = XM_PIDIV2 - (i * XM_2PI / 10.0f);
         p[i] = { cosf(angle) * r, sinf(angle) * r, 0.0f };

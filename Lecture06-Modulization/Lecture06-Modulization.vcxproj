@@ -137,6 +137,11 @@
     <ClInclude Include="Timer.hpp" />
     <ClInclude Include="WindowContext.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="effect.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

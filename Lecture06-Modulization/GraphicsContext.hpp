@@ -52,35 +52,81 @@ public:
         SwapChain->SetFullscreenState(goFull, NULL);
     }
 
-    ShaderSet CompileAndCreate(const void* source, size_t length, bool isFile, D3D11_INPUT_ELEMENT_DESC* ied, UINT iedCount) {
+    ShaderSet CompileAndCreate(const void* source, size_t length, bool isFile, D3D11_INPUT_ELEMENT_DESC* ied, UINT iedCount)
+    {
         ShaderSet res;
-        ID3DBlob* vsBlob = nullptr, * psBlob = nullptr, * errBlob = nullptr;
+        ID3DBlob* vsBlob = nullptr;
+        ID3DBlob* psBlob = nullptr;
+        ID3DBlob* errBlob = nullptr;
         HRESULT hr;
 
-        if (isFile) {
+        if (isFile)
+        {
+            // VS 컴파일
             hr = D3DCompileFromFile((LPCWSTR)source, nullptr, nullptr, "VS", "vs_5_0", 0, 0, &vsBlob, &errBlob);
-            hr = D3DCompileFromFile((LPCWSTR)source, nullptr, nullptr, "PS", "ps_5_0", 0, 0, &psBlob, &errBlob);
-        }
-        else {
-            hr = D3DCompile(source, length, nullptr, nullptr, nullptr, "VS", "vs_5_0", 0, 0, &vsBlob, &errBlob);
-            hr = D3DCompile(source, length, nullptr, nullptr, nullptr, "PS", "ps_5_0", 0, 0, &psBlob, &errBlob);
-        }
-
-        if (FAILED(hr)) {
-            if (errBlob) {
-                OutputDebugStringA((char*)errBlob->GetBufferPointer());
-                errBlob->Release();
+            if (FAILED(hr))
+            {
+                if (errBlob)
+                {
+                    printf("[Shader Error] VS Compile Error (File):\n%s\n", (char*)errBlob->GetBufferPointer());
+                    errBlob->Release();
+                }
+                return res;
             }
-            return res;
+
+            // PS 컴파일
+            hr = D3DCompileFromFile((LPCWSTR)source, nullptr, nullptr, "PS", "ps_5_0", 0, 0, &psBlob, &errBlob);
+            if (FAILED(hr))
+            {
+                if (errBlob)
+                {
+                    printf("[Shader Error] PS Compile Error (File):\n%s\n", (char*)errBlob->GetBufferPointer());
+                    errBlob->Release();
+                }
+                if (vsBlob) vsBlob->Release();
+                return res;
+            }
+        }
+        else
+        {
+            // 메모리 소스 VS 컴파일
+            hr = D3DCompile(source, length, nullptr, nullptr, nullptr, "VS", "vs_5_0", 0, 0, &vsBlob, &errBlob);
+            if (FAILED(hr))
+            {
+                if (errBlob)
+                {
+                    printf("[Shader Error] VS Compile Error:\n%s\n", (char*)errBlob->GetBufferPointer());
+                    errBlob->Release();
+                }
+                return res;
+            }
+
+            // 메모리 소스 PS 컴파일
+            hr = D3DCompile(source, length, nullptr, nullptr, nullptr, "PS", "ps_5_0", 0, 0, &psBlob, &errBlob);
+            if (FAILED(hr))
+            {
+                if (errBlob)
+                {
+                    printf("[Shader Error] PS Compile Error:\n%s\n", (char*)errBlob->GetBufferPointer());
+                    errBlob->Release();
+                }
+                if (vsBlob) vsBlob->Release();
+                return res;
+            }
         }
 
+        // 리소스 생성
         Device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &res.vs);
         Device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &res.ps);
-        if (vsBlob && ied) {
+
+        if (vsBlob && ied)
+        {
             Device->CreateInputLayout(ied, iedCount, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &res.layout);
         }
+
         if (vsBlob) vsBlob->Release();
         if (psBlob) psBlob->Release();
+
         return res;
     }
 };

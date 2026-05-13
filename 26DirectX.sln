@@ -55,7 +55,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture08-FSM", "Lecture08-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture08-Logger", "Lecture08-Logger\Lecture08-Logger.vcxproj", "{E7E2C5AB-4408-4EAB-ACB7-D149B5B20C04}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture08-Event", "Lecture08-Event\Lecture08-Event.vcxproj", "{2DFBBFBC-3D41-4FBC-950C-071F73085C82}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lecture08-Event_FunctionPointer", "Lecture08-Event\Lecture08-Event.vcxproj", "{2DFBBFBC-3D41-4FBC-950C-071F73085C82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
